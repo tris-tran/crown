@@ -2,12 +2,27 @@
 :; emacs -q --no-site-file --batch --load "$0" -- "$@"
 :; exit 0
 
+(require 'package)
+
+(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+
+(setq crown-packages '( (evil :url "http://") (magit) ) )
+
 (message "Starting crown package manager")
 
 (setq crown-commands ())
 
 (defun recruit (args)
-    (message (format "Name: %s" args)))
+    (let* ((crown-package (car args)))
+    (cond (crown-package 
+        (message (format "Installing package: %s" crown-package))
+        (package-install (intern crown-package)))
+        (t (dolist (crown-package-def crown-packages)
+                (let ((crown-package (car crown-package-def)))
+                (message (format "Package %s" crown-package))
+                (package-install crown-package)))))))
 
 (add-to-list 'crown-commands 'recruit)
 
@@ -15,10 +30,12 @@
 
 (defun run! (name &rest args)
     (let* ((args (flatten-list args)) 
-        (command (car args)))
+        (command (car args))
+        (command-args (cdr (flatten-list args))))
     (message (format "Commands: %s" crown-commands))
-    (message (format "Name: %s" run-env))
-    (message (format "Params: %s" (cdr args)))))
+    (message (format "Name: %s" command))
+    (message (format "Params: %s" (cdr args)))
+    (funcall (intern command) command-args)))
 
 (run! "crown" (cdr (member "--" argv)))
 
