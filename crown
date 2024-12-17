@@ -1,0 +1,26 @@
+#!/bin/env sh
+:; emacs -q --no-site-file --batch --load "$0" -- "$@"
+:; exit 0
+
+(message "Starting crown package manager")
+
+(setq crown-commands ())
+
+(defun recruit (args)
+    (message (format "Name: %s" args)))
+
+(add-to-list 'crown-commands 'recruit)
+
+(message (format "%s" crown-commands))
+
+(defun run! (name &rest args)
+    (let* ((args (flatten-list args)) 
+        (command (car args)))
+    (message (format "Commands: %s" crown-commands))
+    (message (format "Name: %s" run-env))
+    (message (format "Params: %s" (cdr args)))))
+
+(run! "crown" (cdr (member "--" argv)))
+
+(message "End crown package manager")
+
