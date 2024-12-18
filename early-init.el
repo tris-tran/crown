@@ -1,0 +1,2 @@
+
+(message "early-init.el")
