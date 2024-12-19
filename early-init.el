@@ -1,2 +1,2 @@
 
-(message "early-init.el")
+(@debug "early-init.el")

@@ -3,14 +3,23 @@
 :; # -*- lexical-binding: t -*-
 :; emacs -q --no-site-file --batch --load "$0" -- "$@"
 :; exit 0
+(add-to-list 'load-path "./lib/")
+
 (require 'package)
 (require 'cl)
+(require 'crown-log)
 
-(message (format "Lexical binding [%s]" lexical-binding))
+(@debug (format "Lexical binding [%s]" lexical-binding))
 
 (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+
+(setq crown-folder (file-name-directory (file-truename load-file-name)))
+(setq crown-early-init (expand-file-name "./early-init.el" crown-folder))
+(setq crown-init (expand-file-name "./init.el" crown-folder))
+
+(copy-file crown-init "~/.emacs.d/init.el")
 
 (condition-case e
     (let* ((crown-bin-folder (file-name-directory (file-truename load-file-name)))
@@ -18,50 +27,51 @@
         (crown-packages-file (expand-file-name "./crown-packages.el" crown-bin-folder)))
         (load crown-packages-file nil 'nomessage 'nosuffix)
         (load init-file nil 'nomessage 'nosuffix))
-    (error (message (format "Error: %s" e))
+    (error (@error (format "Error: %s" e))
               (kill-emacs 2)))
 
-(message "Starting crown package manager")
+(@debug "Starting crown package manager")
 
-(message (format "Packages %s" crown-packages))
+(@debug (format "Packages %s" crown-packages))
 
 (setq crown-commands ())
 
 (defun recruit (args)
     (let* ((crown-package (car args)))
     (cond (crown-package 
-        (message (format "Installing package: %s" crown-package))
+        (@trace (format "Installing package: %s" crown-package))
         (package-install (intern crown-package)))
         (t (dolist (crown-package-def crown-packages)
                 (let ((crown-package (car crown-package-def)))
-                (message (format "Package %s" crown-package))
+                (@trace (format "Package %s" crown-package))
                 (package-install crown-package)))))))
 
 (add-to-list 'crown-commands #'recruit)
 
-(message (format "%s" crown-commands))
+(@trace (format "%s" crown-commands))
 
 (defun cli|no-comnd (comnd)
   (lexical-let ((comnd comnd))
     #'(lambda (args)
-	(message (format "No commnd for %s full [%s]" comnd args)))))
+	(@trace (format "No commnd for %s full [%s]" comnd args)))))
 
 (defun cli|comnd-exist (comnd)
       (if (fboundp (intern comnd))
 	  (intern comnd)
-	(message comnd)
+	(@debug comnd)
 	(cli|no-comnd comnd)))
 
 (defun run! (name &rest args)
     (let* ((args (flatten-list args)) 
         (command (car args))
         (command-args (cdr (flatten-list args))))
-    (message (format "Commands: %s" crown-commands))
-    (message (format "Name: %s" command))
-    (message (format "Params: %s" (cdr args)))
+    (@log (format "Commands: %s" crown-commands))
+    (@log (format "Name: %s" command))
+    (@log (format "Params: %s" (cdr args)))
     (funcall (cli|comnd-exist command) command-args)))
 
 (run! "crown" (cdr (member "--" argv)))
 
-(message "End crown package manager")
+
+(@debug "End crown package manager")
 
