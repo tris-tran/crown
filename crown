@@ -3,7 +3,7 @@
 :; # -*- lexical-binding: t -*-
 :; emacs -q --no-site-file --batch --load "$0" -- "$@"
 :; exit 0
-(add-to-list 'load-path "./lib/")
+(add-to-list 'load-path "/home/eochoa/.config/emacs/lib/")
 
 (require 'package)
 (require 'cl)
