@@ -3,11 +3,15 @@
 :; # -*- lexical-binding: t -*-
 :; emacs -q --no-site-file --batch --load "$0" -- "$@"
 :; exit 0
-(add-to-list 'load-path "/home/eochoa/.config/emacs/lib/")
+(add-to-list 'load-path "./lib/")
+(add-to-list 'load-path "./lib/lib/")
 
 (require 'package)
-(require 'cl)
+(require 'cl-lib)
 (require 'crown-log)
+(require 'crown-recipe)
+(require 'crown-lib)
+(require 'crown-recipe-build)
 
 (@debug (format "Lexical binding [%s]" lexical-binding))
 
