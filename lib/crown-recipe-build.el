@@ -8,9 +8,10 @@
 (require 'cl)
 (require 'crown-recipe)
 
-(defvar crown-build-path "/home/tristanstille/Borrar/evil")
+;(defvar crown-build-path "/home/tristanstille/Borrar/evil")
+(defvar crown-build-path "~/Downloads/Borrar/evil")
 (defvar crown-packages-path "")
-(defvar crown-recipes-path "/home/tristanstille/Projects/crown/recipies/")
+(defvar crown-recipes-path "/home/eochoa/.config/emacs/recipies/")
 
 (defun crown|git-fetcher (def build-path uri &optional commit)
   (message "GIT CLONE %s" uri)
