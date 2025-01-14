@@ -6,7 +6,9 @@
            :uri "https://github.com/emacs-evil/evil.git"
            :commit "commit")
   :build (crown|default-builder
-           :files '(""))
-  :install "asdsda"
-  :dependencies '('evil-dep)
+	  :files '(:defaults
+		   :exclude ("evil-test-helpers.el"))
+
+  :install (crown|default-installer)
+  :dependencies nil
   :doc "asdasdasd")

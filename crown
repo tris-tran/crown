@@ -13,6 +13,8 @@
 (require 'crown-lib)
 (require 'crown-recipe-build)
 
+(kill-emacs 0)
+
 (@debug (format "Lexical binding [%s]" lexical-binding))
 
 (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
